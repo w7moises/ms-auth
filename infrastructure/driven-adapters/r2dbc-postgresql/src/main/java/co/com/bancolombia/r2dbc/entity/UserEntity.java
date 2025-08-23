@@ -1,12 +1,12 @@
 package co.com.bancolombia.r2dbc.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Table(name = "users")
 @AllArgsConstructor
@@ -18,11 +18,12 @@ public class UserEntity {
     @Id
     private Long id;
     private String name;
+    @Column("last_name")
     private String lastName;
-    private Date birthDate;
+    @Column("birth_date")
+    private LocalDate birthDate;
     private String address;
     private String cellphone;
-    @Column(unique = true)
     private String email;
     private BigDecimal salary;
 }

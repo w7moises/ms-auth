@@ -10,13 +10,17 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class RouterRest {
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(HandlerV1 handlerV1) {
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
         return RouterFunctions
                 .route()
-                .path("/api/v1", builder -> builder
-                        .GET("/usecase/path", handlerV1::listenGETUseCase)
-                        .POST("/usecase/otherpath", handlerV1::listenPOSTUseCase)
-                        .GET("/otherusercase/path", handlerV1::listenGETOtherUseCase))
+                .path("/api/v1/users", builder -> builder
+                        .POST("", userHandler::createUser)
+                        .GET("", userHandler::getAllUsers)
+                        .GET("/{id}", userHandler::getUserById)
+                        .PUT("/{id}", userHandler::updateUser)
+                        .GET("/by-email/{email}", userHandler::getUserByEmail)
+                        .DELETE("/{email}", userHandler::deleteUserByEmail)
+                )
                 .build();
     }
 }

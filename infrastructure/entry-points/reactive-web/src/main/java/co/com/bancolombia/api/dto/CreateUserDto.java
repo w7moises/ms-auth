@@ -1,9 +1,10 @@
 package co.com.bancolombia.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public record CreateUserDto(
         @NotBlank(message = "Los nombres son necesario")
@@ -14,7 +15,8 @@ public record CreateUserDto(
 
         @NotNull(message = "La fecha de nacimiento es necesaria")
         @Past(message = "La fecha de nacimiento debe estar en el pasado")
-        Date birthDate,
+        @JsonFormat(pattern = "dd-MM-yyyy")
+        LocalDate birthDate,
 
         String address,
 

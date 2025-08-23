@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 public interface UserRepository {
     Mono<String> saveUser(User user);
 
+    Mono<String> updateUser(User user);
+
     Mono<User> findUserById(Long id);
 
     Mono<User> findUserByEmail(String email);
