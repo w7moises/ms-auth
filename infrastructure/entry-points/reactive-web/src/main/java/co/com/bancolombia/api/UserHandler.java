@@ -31,10 +31,9 @@ public class UserHandler {
                     var violations = validator.validate(dto);
                     if (!violations.isEmpty())
                         return Mono.error(new ConstraintViolationException(violations));
-                    return userUseCase.saveUser(mapper.toModel(dto))
-                            .flatMap(msg -> ServerResponse.status(HttpStatus.CREATED)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(Map.of("message", msg)));
+                    return userUseCase.saveUser(mapper.toModel(dto)).flatMap(data -> ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(data));
                 });
     }
 
@@ -47,10 +46,9 @@ public class UserHandler {
                         return Mono.error(new ConstraintViolationException(violations));
                     var userToUpdate = mapper.toModel(dto);
                     userToUpdate.setId(id);
-                    return userUseCase.updateUser(userToUpdate)
-                            .flatMap(msg -> ServerResponse.ok()
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(Map.of("message", msg)));
+                    return userUseCase.updateUser(userToUpdate).flatMap(data -> ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(data));
                 });
     }
 
