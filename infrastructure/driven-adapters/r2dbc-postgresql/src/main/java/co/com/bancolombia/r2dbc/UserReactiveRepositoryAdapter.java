@@ -9,6 +9,7 @@ import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -21,72 +22,69 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UserReactiveRepository
         > implements UserRepository {
     public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
-        /**
-         *  Could be use mapper.mapBuilder if your domain model implement builder pattern
-         *  super(repository, mapper, d -> mapper.mapBuilder(d,ObjectModel.ObjectModelBuilder.class).build());
-         *  Or using mapper.map with the class of the object model
-         */
         super(repository, mapper, d -> mapper.map(d, User.class));
     }
 
+    @Transactional(transactionManager = "r2dbcTransactionManager")
     @Override
-    public Mono<String> saveUser(User user) {
+    public Mono<User> saveUser(User user) {
         return repository.existsByEmail(user.getEmail())
                 .flatMap(exists -> exists
-                        ? Mono.error(new FoundException("El email ya está registrado: " + user.getEmail()))
-                        : super.save(user).map(saved -> "Usuario guardado con id: " + saved.getId())
+                        ? Mono.error(new FoundException("user.email.alreadyExists", user.getEmail()))
+                        : super.save(user)
                 )
                 .doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
     }
 
+    @Transactional(transactionManager = "r2dbcTransactionManager")
     @Override
-    public Mono<String> updateUser(User user) {
+    public Mono<User> updateUser(User user) {
         return super.findById(user.getId())
-                .switchIfEmpty(Mono.error(new NotFoundException("Usuario no encontrado con id: " + user.getId())))
+                .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.id", user.getId())))
                 .flatMap(actual -> {
                     String newEmail = user.getEmail();
                     String oldEmail = actual.getEmail();
                     if (newEmail.equalsIgnoreCase(oldEmail))
-                        return super.save(user)
-                                .map(u -> "Usuario actualizado con id: " + u.getId());
+                        return super.save(user);
                     return repository.findByEmail(newEmail)
                             .flatMap(found -> {
                                 if (found.getId().equals(user.getId()))
-                                    return super.save(user)
-                                            .map(u -> "Usuario actualizado con id: " + u.getId());
-                                return Mono.error(new FoundException("El email ya está registrado: " + newEmail));
+                                    return super.save(user);
+                                return Mono.error(new FoundException("user.email.alreadyExists", newEmail));
                             })
-                            .switchIfEmpty(super.save(user).map(u -> "Usuario actualizado con id: " + u.getId()));
+                            .switchIfEmpty(super.save(user));
                 })
                 .doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Mono<User> findUserById(Long id) {
         return super.findById(id)
-                .switchIfEmpty(Mono.error(new NotFoundException("Usuario no encontrado con id: " + id)));
+                .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.id", id)));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Mono<User> findUserByEmail(String email) {
         return repository.findByEmail(email)
                 .map(this::toEntity)
-                .switchIfEmpty(Mono.error(new NotFoundException("Usuario no encontrado con email: " + email)));
+                .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.email", email)));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Flux<User> findAllUsers() {
-        return super.findAll();
+        return super.findAll()
+                .doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
     }
 
+    @Transactional(transactionManager = "r2dbcTransactionManager")
     @Override
-    public Mono<String> deleteByEmail(String email) {
+    public Mono<Void> deleteByEmail(String email) {
         return repository.findByEmail(email)
-                .switchIfEmpty(Mono.error(new NotFoundException("Usuario no encontrado con email: " + email)))
-                .flatMap(entity ->
-                        repository.deleteById(entity.getId())
-                                .thenReturn("Usuario eliminado con correo: " + email)
-                )
-                .doOnError(ex -> log.error("Error eliminando usuario {}: {}", email, ex.getMessage(), ex));
+                .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.email", email)))
+                .flatMap(entity -> repository.deleteById(entity.getId()))
+                .doOnError(ex -> log.error("error ({}): {}", email, ex.getMessage(), ex));
     }
 }

@@ -59,7 +59,7 @@ public class AuthorizationJwt implements WebFluxConfigurer {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
-                        .pathMatchers("/api/v1/users/**").permitAll()
+                        .pathMatchers("/**").permitAll()
                         .anyExchange()
                         .authenticated())
                 .oauth2ResourceServer(oauth2 ->

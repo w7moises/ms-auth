@@ -7,14 +7,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record CreateUserDto(
-        @NotBlank(message = "Los nombres son necesario")
+        @NotBlank(message = "{name.required}")
         String name,
 
-        @NotBlank(message = "Los apellidos son necesarios")
+        @NotBlank(message = "{lastName.constraint}")
         String lastName,
 
-        @NotNull(message = "La fecha de nacimiento es necesaria")
-        @Past(message = "La fecha de nacimiento debe estar en el pasado")
+        @NotNull(message = "{birthDate.required}")
+        @Past(message = "{birthDate.past}")
         @JsonFormat(pattern = "dd-MM-yyyy")
         LocalDate birthDate,
 
@@ -22,13 +22,13 @@ public record CreateUserDto(
 
         String cellphone,
 
-        @NotBlank(message = "El correo electrónico es necesario")
-        @Email(message = "El correo electrónico debe tener un buen formato")
+        @NotBlank(message = "{email.required}")
+        @Email(message = "{email.format}")
         String email,
 
-        @NotNull(message = "El salario es necesario")
-        @DecimalMin(value = "0.0", inclusive = false, message = "El salario no puede ser negativo")
-        @DecimalMax(value = "1500000.0", inclusive = false, message = "El salario no puede superar 1,500,000")
+        @NotNull(message = "{salary.required}")
+        @DecimalMin(value = "0.0", inclusive = false, message = "{salary.min}")
+        @DecimalMax(value = "1500000.0", inclusive = false, message = "{salary.max}")
         BigDecimal salary
 ) {
 }

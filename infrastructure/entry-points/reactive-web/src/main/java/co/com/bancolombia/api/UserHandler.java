@@ -81,9 +81,7 @@ public class UserHandler {
     public Mono<ServerResponse> deleteUserByEmail(ServerRequest request) {
         String email = request.pathVariable("email");
         return userUseCase.deleteByEmail(email)
-                .flatMap(msg -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(Map.of("message", msg)));
+                .then(ServerResponse.noContent().build());
     }
 
 }
