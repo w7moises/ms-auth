@@ -4,12 +4,12 @@ import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.EditUserDto;
 import co.com.bancolombia.api.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
 
 @Configuration
 public class RouterRest {
@@ -34,19 +33,19 @@ public class RouterRest {
                     beanMethod = "createUser",
                     operation = @Operation(
                             operationId = "createUser",
-                            summary = "Crear usuario",
+                            summary = "Create user",
                             requestBody = @RequestBody(
                                     content = @Content(schema = @Schema(implementation = CreateUserDto.class))
                             ),
                             responses = {
                                     @ApiResponse(
                                             responseCode = "201",
-                                            description = "Validacion Fallida",
-                                            content = @Content(schema = @Schema(type = "string", example = "Usuario guardado con id:"))
+                                            description = "Created",
+                                            content = @Content(schema = @Schema(type = "string", example = "User saved with id:"))
                                     ),
                                     @ApiResponse(
                                             responseCode = "400",
-                                            description = "Validacion Fallida",
+                                            description = "Validation failed",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }
@@ -60,7 +59,7 @@ public class RouterRest {
                     beanMethod = "updateUser",
                     operation = @Operation(
                             operationId = "updateUser",
-                            summary = "Actualizar usuario por id",
+                            summary = "Update user by id",
                             parameters = {
                                     @Parameter(name = "id", in = ParameterIn.PATH, required = true)
                             },
@@ -70,16 +69,16 @@ public class RouterRest {
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
-                                            description = "Actualizado"
+                                            description = "Updated"
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "No encontrado",
+                                            description = "Not found",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     ),
                                     @ApiResponse(
                                             responseCode = "400",
-                                            description = "Validacion Fallida",
+                                            description = "Validation failed",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }
@@ -93,7 +92,7 @@ public class RouterRest {
                     beanMethod = "getUserById",
                     operation = @Operation(
                             operationId = "getUserById",
-                            summary = "Obtener usuario por id",
+                            summary = "Get user by id",
                             parameters = {
                                     @Parameter(name = "id", in = ParameterIn.PATH, required = true)
                             },
@@ -101,10 +100,11 @@ public class RouterRest {
                                     @ApiResponse(
                                             responseCode = "200",
                                             description = "OK",
-                                            content = @Content(schema = @Schema(implementation = UserDto.class))),
+                                            content = @Content(schema = @Schema(implementation = UserDto.class))
+                                    ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "No encontrado",
+                                            description = "Not found",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }
@@ -118,23 +118,22 @@ public class RouterRest {
                     beanMethod = "getUserByEmail",
                     operation = @Operation(
                             operationId = "getUserByEmail",
-                            summary = "Obtener usuario por email",
+                            summary = "Get user by email",
                             parameters = {
                                     @Parameter(name = "email", in = ParameterIn.PATH, required = true)
                             },
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
-                                            description = "Usuario",
+                                            description = "User",
                                             content = @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                                     schema = @Schema(implementation = UserDto.class)
                                             )
-
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "No encontrado",
+                                            description = "Not found",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }
@@ -148,11 +147,11 @@ public class RouterRest {
                     beanMethod = "getAllUsers",
                     operation = @Operation(
                             operationId = "getAllUsers",
-                            summary = "Listar usuarios",
+                            summary = "List users",
                             responses = {
                                     @ApiResponse(
                                             responseCode = "200",
-                                            description = "Lista de usuarios",
+                                            description = "List of users",
                                             content = @Content(
                                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                                     array = @ArraySchema(schema = @Schema(implementation = UserDto.class))
@@ -169,17 +168,18 @@ public class RouterRest {
                     beanMethod = "deleteUserByEmail",
                     operation = @Operation(
                             operationId = "deleteUserByEmail",
-                            summary = "Eliminar usuario por email",
+                            summary = "Delete user by email",
                             parameters = {
                                     @Parameter(name = "email", in = ParameterIn.PATH, required = true)
                             },
                             responses = {
                                     @ApiResponse(
-                                            responseCode = "200"
+                                            responseCode = "200",
+                                            description = "Deleted"
                                     ),
                                     @ApiResponse(
                                             responseCode = "404",
-                                            description = "No encontrado",
+                                            description = "Not found",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }
