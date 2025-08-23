@@ -20,7 +20,7 @@ spring:
 adapter:
   restconsumer:
     timeout: 5000
-    url: "http://localhost:8080"
+    url: "http://localhost:9000"
 management:
   health:
     circuitbreakers:
@@ -58,3 +58,12 @@ jwt:
   json-exp-roles: "/roles"
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5432
+    database: "ms-auth"
+    schema: "public"
+    username: "postgres"
+    password: "admin123"
