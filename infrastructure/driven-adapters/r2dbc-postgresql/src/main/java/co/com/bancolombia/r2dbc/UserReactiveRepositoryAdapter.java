@@ -41,20 +41,12 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<User> updateUser(User user) {
         return super.findById(user.getId())
                 .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.id", user.getId())))
-                .flatMap(actual -> {
-                    String newEmail = user.getEmail();
-                    String oldEmail = actual.getEmail();
-                    if (newEmail.equalsIgnoreCase(oldEmail))
-                        return super.save(user);
-                    return repository.findByEmail(newEmail)
-                            .flatMap(found -> {
-                                if (found.getId().equals(user.getId()))
-                                    return super.save(user);
-                                return Mono.error(new FoundException("user.email.alreadyExists", newEmail));
-                            })
-                            .switchIfEmpty(super.save(user));
-                })
-                .doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
+                .flatMap(current -> repository.findByEmail(user.getEmail())
+                        .filter(other -> !other.getId().equals(user.getId()))
+                        .hasElement()
+                        .flatMap(hasConflict -> hasConflict ? Mono.error(new FoundException("user.email.alreadyExists"))
+                                : super.save(user))
+                ).doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
     }
 
     @Transactional(readOnly = true)

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(excludeAutoConfiguration = {
         org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration.class
 })
-@Import(UserDtoMapperImpl.class) // mapper real de MapStruct para los GETs
+@Import(UserDtoMapperImpl.class)
 class UserRestTest {
 
     @Autowired
@@ -36,7 +36,7 @@ class UserRestTest {
 
     @Test
     void shouldGetAllUsers() {
-        when(userUseCase.findAllUsers()).thenReturn(Flux.just(userMock(), userMock2()));
+        when(userUseCase.findAllUsers()).thenReturn(Flux.just(USER_MOCK, USER_MOCK2));
         webTestClient.get()
                 .uri(USERS_BASE)
                 .accept(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ class UserRestTest {
     @Test
     void shouldGetUserById() {
         Long id = 1L;
-        when(userUseCase.findUserById(id)).thenReturn(Mono.just(userMock()));
+        when(userUseCase.findUserById(id)).thenReturn(Mono.just(USER_MOCK));
         webTestClient.get()
                 .uri(USERS_BASE + "/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,7 +66,7 @@ class UserRestTest {
     @Test
     void shouldGetUserByEmail() {
         String email = "w7@gmail.com";
-        when(userUseCase.findUserByEmail(email)).thenReturn(Mono.just(userMock()));
+        when(userUseCase.findUserByEmail(email)).thenReturn(Mono.just(USER_MOCK));
         webTestClient.get()
                 .uri(USERS_BASE + "/email/{email}", email)
                 .accept(MediaType.APPLICATION_JSON)
@@ -78,11 +78,11 @@ class UserRestTest {
 
     @Test
     void shouldPostCreateUser() {
-        when(userUseCase.saveUser(any(User.class))).thenReturn(Mono.just(userMock2()));
+        when(userUseCase.saveUser(any(User.class))).thenReturn(Mono.just(USER_MOCK2));
         webTestClient.post()
                 .uri(USERS_BASE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createUserDto())
+                .bodyValue(CREATE_USER_DTO)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(User.class)
@@ -95,15 +95,15 @@ class UserRestTest {
     @Test
     void shouldPutUpdateUser() {
         Long id = 1L;
-        when(userUseCase.updateUser(any(User.class))).thenReturn(Mono.just(userUpdated()));
+        when(userUseCase.updateUser(any(User.class))).thenReturn(Mono.just(USER_MOCK_UPDATED));
         webTestClient.put()
                 .uri(USERS_BASE + "/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(editUserDtoUpdated())
+                .bodyValue(EDIT_USER_DTO)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(User.class)
-                .value(u -> Assertions.assertThat(u.getLastName()).isEqualTo("Updated"));
+                .value(u -> Assertions.assertThat(u.getLastName()).isEqualTo("UPDATE"));
     }
 
     @Test
