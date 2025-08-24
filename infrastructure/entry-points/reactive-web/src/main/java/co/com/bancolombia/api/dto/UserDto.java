@@ -7,6 +7,7 @@ public record UserDto(
         Long id,
         String name,
         String lastName,
+        String documentNumber,
         LocalDate birthDate,
         String address,
         String cellphone,
