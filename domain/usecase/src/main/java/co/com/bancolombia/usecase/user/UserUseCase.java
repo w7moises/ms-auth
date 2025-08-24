@@ -10,11 +10,11 @@ import reactor.core.publisher.Mono;
 public class UserUseCase {
     private final UserRepository userRepository;
 
-    public Mono<String> saveUser(User user) {
+    public Mono<User> saveUser(User user) {
         return userRepository.saveUser(user);
     }
 
-    public Mono<String> updateUser(User user) {
+    public Mono<User> updateUser(User user) {
         return userRepository.updateUser(user);
     }
 
@@ -31,7 +31,7 @@ public class UserUseCase {
     }
 
 
-    public Mono<String> deleteByEmail(String email) {
+    public Mono<Void> deleteByEmail(String email) {
         return userRepository.deleteByEmail(email);
     }
 }

@@ -5,9 +5,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface UserRepository {
-    Mono<String> saveUser(User user);
+    Mono<User> saveUser(User user);
 
-    Mono<String> updateUser(User user);
+    Mono<User> updateUser(User user);
 
     Mono<User> findUserById(Long id);
 
@@ -15,5 +15,5 @@ public interface UserRepository {
 
     Flux<User> findAllUsers();
 
-    Mono<String> deleteByEmail(String email);
+    Mono<Void> deleteByEmail(String email);
 }

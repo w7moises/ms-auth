@@ -8,14 +8,11 @@ import co.com.bancolombia.usecase.user.UserUseCase;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +28,9 @@ public class UserHandler {
                     var violations = validator.validate(dto);
                     if (!violations.isEmpty())
                         return Mono.error(new ConstraintViolationException(violations));
-                    return userUseCase.saveUser(mapper.toModel(dto))
-                            .flatMap(msg -> ServerResponse.status(HttpStatus.CREATED)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(Map.of("message", msg)));
+                    return userUseCase.saveUser(mapper.toModel(dto)).flatMap(data -> ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(data));
                 });
     }
 
@@ -47,10 +43,9 @@ public class UserHandler {
                         return Mono.error(new ConstraintViolationException(violations));
                     var userToUpdate = mapper.toModel(dto);
                     userToUpdate.setId(id);
-                    return userUseCase.updateUser(userToUpdate)
-                            .flatMap(msg -> ServerResponse.ok()
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(Map.of("message", msg)));
+                    return userUseCase.updateUser(userToUpdate).flatMap(data -> ServerResponse.ok()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(data));
                 });
     }
 
@@ -81,9 +76,7 @@ public class UserHandler {
     public Mono<ServerResponse> deleteUserByEmail(ServerRequest request) {
         String email = request.pathVariable("email");
         return userUseCase.deleteByEmail(email)
-                .flatMap(msg -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(Map.of("message", msg)));
+                .then(ServerResponse.noContent().build());
     }
 
 }
