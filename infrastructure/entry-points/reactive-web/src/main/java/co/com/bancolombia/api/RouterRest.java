@@ -220,7 +220,7 @@ public class RouterRest {
                 .route()
                 .path("/api/v1/users", builder -> builder
                         .POST("", userHandler::createUser)
-                        .GET("", userHandler::getAllUsers)
+                        .GET("", request -> userHandler.getAllUsers())
                         .GET("/{id}", userHandler::getUserById)
                         .PUT("/{id}", userHandler::updateUser)
                         .GET("/document/{document}", userHandler::getUserByDocumentNumber)
