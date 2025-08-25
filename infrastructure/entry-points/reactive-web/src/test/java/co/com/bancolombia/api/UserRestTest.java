@@ -122,7 +122,7 @@ class UserRestTest {
     @Test
     void shouldDeleteUserByEmail() {
         String email = "w7@gmail.com";
-        when(userUseCase.deleteByEmail(eq(email))).thenReturn(Mono.empty());
+        when(userUseCase.deleteByEmail(email)).thenReturn(Mono.empty());
         webTestClient.delete()
                 .uri(USERS_BASE + "/email/{email}", email)
                 .exchange()
