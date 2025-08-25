@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MyReactiveRepositoryAdapterTest {
+class UserReactiveRepositoryAdapterTest {
 
     @InjectMocks
     UserReactiveRepositoryAdapter adapter;
@@ -35,6 +35,7 @@ class MyReactiveRepositoryAdapterTest {
             .id(1L)
             .name("Moises")
             .lastName("Molina")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1992, 2, 2))
             .address("Calle ayacucho")
             .cellphone("982389811")
@@ -46,6 +47,7 @@ class MyReactiveRepositoryAdapterTest {
             .id(2L)
             .name("Walter")
             .lastName("Molina")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1999, 5, 22))
             .address("Av. puquina 115")
             .cellphone("666423665")
@@ -57,6 +59,7 @@ class MyReactiveRepositoryAdapterTest {
             .id(2L)
             .name("Walter")
             .lastName("Molina Update")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1999, 5, 22))
             .address("Av. puquina 115")
             .cellphone("666423665")
@@ -68,6 +71,7 @@ class MyReactiveRepositoryAdapterTest {
             .id(2L)
             .name("Walter")
             .lastName("Molina")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1999, 5, 22))
             .address("Av. puquina 115")
             .cellphone("666423665")
@@ -79,6 +83,7 @@ class MyReactiveRepositoryAdapterTest {
             .id(9L)
             .name("Walter")
             .lastName("Molina")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1999, 5, 22))
             .address("Av. puquina 115")
             .cellphone("666423665")
@@ -101,6 +106,16 @@ class MyReactiveRepositoryAdapterTest {
         when(mapper.map(USER_MOCK_ENTITY, User.class)).thenReturn(USER_MOCK);
         when(repository.findByEmail("wmolina@gmail.com")).thenReturn(Mono.just(USER_MOCK_ENTITY));
         Mono<User> data = adapter.findUserByEmail("wmolina@gmail.com");
+        StepVerifier.create(data)
+                .expectNextMatches(user -> user.getId().equals(1L) && user.getName().equals("Moises"))
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldFindUserByDocumentNumber() {
+        when(mapper.map(USER_MOCK_ENTITY, User.class)).thenReturn(USER_MOCK);
+        when(repository.findByDocumentNumber("73727173")).thenReturn(Mono.just(USER_MOCK_ENTITY));
+        Mono<User> data = adapter.findUserByDocumentNumber("73727173");
         StepVerifier.create(data)
                 .expectNextMatches(user -> user.getId().equals(1L) && user.getName().equals("Moises"))
                 .verifyComplete();

@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Mono<User> findUserByEmail(String email);
 
+    Mono<User> findUserByDocumentNumber(String documentNumber);
+
     Flux<User> findAllUsers();
 
     Mono<Void> deleteByEmail(String email);

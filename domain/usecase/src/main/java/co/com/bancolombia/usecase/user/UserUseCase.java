@@ -22,6 +22,10 @@ public class UserUseCase {
         return userRepository.findUserById(id);
     }
 
+    public Mono<User> findUserByDocumentNumber(String documentNumber) {
+        return userRepository.findUserByDocumentNumber(documentNumber);
+    }
+
     public Mono<User> findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
@@ -29,7 +33,6 @@ public class UserUseCase {
     public Flux<User> findAllUsers() {
         return userRepository.findAllUsers();
     }
-
 
     public Mono<Void> deleteByEmail(String email) {
         return userRepository.deleteByEmail(email);

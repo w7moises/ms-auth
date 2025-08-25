@@ -13,6 +13,8 @@ public record EditUserDto(
         @NotBlank(message = "{lastName.constraint}")
         String lastName,
 
+        String documentNumber,
+
         @NotNull(message = "{birthDate.required}")
         @Past(message = "{birthDate.past}")
         @JsonFormat(pattern = "dd-MM-yyyy")

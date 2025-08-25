@@ -140,6 +140,35 @@ public class RouterRest {
                     )
             ),
             @RouterOperation(
+                    path = "/api/v1/users/document/{document}",
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "getUserByDocumentNumber",
+                    operation = @Operation(
+                            operationId = "getUserByDocumentNumber",
+                            summary = "Get user by document number",
+                            parameters = {
+                                    @Parameter(name = "document", in = ParameterIn.PATH, required = true)
+                            },
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "User",
+                                            content = @Content(
+                                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                                    schema = @Schema(implementation = UserDto.class)
+                                            )
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Not found",
+                                            content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
+                                    )
+                            }
+                    )
+            ),
+            @RouterOperation(
                     path = "/api/v1/users",
                     produces = {MediaType.APPLICATION_JSON_VALUE},
                     method = RequestMethod.GET,
@@ -194,6 +223,7 @@ public class RouterRest {
                         .GET("", userHandler::getAllUsers)
                         .GET("/{id}", userHandler::getUserById)
                         .PUT("/{id}", userHandler::updateUser)
+                        .GET("/document/{document}", userHandler::getUserByDocumentNumber)
                         .GET("/email/{email}", userHandler::getUserByEmail)
                         .DELETE("/email/{email}", userHandler::deleteUserByEmail)
                 )

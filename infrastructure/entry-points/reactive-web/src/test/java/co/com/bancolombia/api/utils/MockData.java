@@ -14,7 +14,8 @@ public class MockData {
             .id(1L)
             .name("Moises")
             .lastName("Molina")
-            .birthDate(LocalDate.of(1992, 2, 2))
+            .documentNumber("73727173")
+            .birthDate(LocalDate.now())
             .address("Calle ayacucho")
             .cellphone("982389811")
             .email("w7@gmail.com")
@@ -25,7 +26,8 @@ public class MockData {
             .id(2L)
             .name("Walter")
             .lastName("Molina")
-            .birthDate(LocalDate.of(1999, 5, 22))
+            .documentNumber("73727173")
+            .birthDate(LocalDate.now())
             .address("Av. puquina 115")
             .cellphone("666423665")
             .email("wmolina@gmail.com")
@@ -36,6 +38,7 @@ public class MockData {
             .id(2L)
             .name("Walter")
             .lastName("UPDATE")
+            .documentNumber("73727173")
             .birthDate(LocalDate.of(1999, 5, 22))
             .address("Av. puquina 115")
             .cellphone("666423665")
@@ -44,13 +47,13 @@ public class MockData {
             .build();
 
     public static final CreateUserDto CREATE_USER_DTO = new CreateUserDto(
-            "Walter", "Molina", LocalDate.of(1999, 5, 22),
+            "Walter", "Molina", "73728131", LocalDate.of(1999, 5, 22),
             "Av. puquina 115", "666423665", "wmolina@gmail.com",
             new BigDecimal("1234")
     );
 
     public static final EditUserDto EDIT_USER_DTO = new EditUserDto(
-            "Moises", "Molina", LocalDate.of(1992, 2, 2),
+            "Moises", "Molina", "73728131", LocalDate.of(1992, 2, 2),
             "Calle ayacucho", "982389811", "w7@gmail.com",
             new BigDecimal("2345")
     );

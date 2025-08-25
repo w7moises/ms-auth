@@ -20,6 +20,8 @@ public class UserEntity {
     private String name;
     @Column("last_name")
     private String lastName;
+    @Column("document_number")
+    private String documentNumber;
     @Column("birth_date")
     private LocalDate birthDate;
     private String address;

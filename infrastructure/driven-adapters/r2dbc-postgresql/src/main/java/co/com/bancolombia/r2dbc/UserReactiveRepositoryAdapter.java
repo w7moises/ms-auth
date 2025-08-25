@@ -66,9 +66,16 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Transactional(readOnly = true)
     @Override
+    public Mono<User> findUserByDocumentNumber(String documentNumber) {
+        return repository.findByDocumentNumber(documentNumber)
+                .map(this::toEntity)
+                .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.documentNumber", documentNumber)));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Flux<User> findAllUsers() {
-        return super.findAll()
-                .doOnError(ex -> log.error("error({})", ex.getMessage(), ex));
+        return super.findAll();
     }
 
     @Transactional(transactionManager = "r2dbcTransactionManager")
@@ -76,7 +83,6 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Void> deleteByEmail(String email) {
         return repository.findByEmail(email)
                 .switchIfEmpty(Mono.error(new NotFoundException("user.notFound.email", email)))
-                .flatMap(entity -> repository.deleteById(entity.getId()))
-                .doOnError(ex -> log.error("error ({}): {}", email, ex.getMessage(), ex));
+                .flatMap(entity -> repository.deleteById(entity.getId()));
     }
 }
