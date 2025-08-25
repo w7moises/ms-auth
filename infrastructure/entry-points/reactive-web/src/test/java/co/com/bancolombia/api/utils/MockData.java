@@ -20,6 +20,7 @@ public class MockData {
             .cellphone("982389811")
             .email("w7@gmail.com")
             .salary(new BigDecimal("2345"))
+            .roleId(2L)
             .build();
 
     public static final User USER_MOCK2 = User.builder()
@@ -32,6 +33,7 @@ public class MockData {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     public static final User USER_MOCK_UPDATED = User.builder()
@@ -44,17 +46,18 @@ public class MockData {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     public static final CreateUserDto CREATE_USER_DTO = new CreateUserDto(
             "Walter", "Molina", "73728131", LocalDate.of(1999, 5, 22),
             "Av. puquina 115", "666423665", "wmolina@gmail.com",
-            new BigDecimal("1234")
+            new BigDecimal("1234"), 2L
     );
 
     public static final EditUserDto EDIT_USER_DTO = new EditUserDto(
             "Moises", "Molina", "73728131", LocalDate.of(1992, 2, 2),
             "Calle ayacucho", "982389811", "w7@gmail.com",
-            new BigDecimal("2345")
+            new BigDecimal("2345"), 2L
     );
 }

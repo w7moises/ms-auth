@@ -28,4 +28,6 @@ public class UserEntity {
     private String cellphone;
     private String email;
     private BigDecimal salary;
+    @Column("role_id")
+    private Long roleId;
 }

@@ -31,6 +31,8 @@ public record CreateUserDto(
         @NotNull(message = "{salary.required}")
         @DecimalMin(value = "0.0", inclusive = false, message = "{salary.min}")
         @DecimalMax(value = "1500000.0", inclusive = false, message = "{salary.max}")
-        BigDecimal salary
+        BigDecimal salary,
+
+        Long roleId
 ) {
 }
