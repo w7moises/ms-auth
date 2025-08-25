@@ -6,10 +6,11 @@ import co.com.bancolombia.api.dto.EditUserDto;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.model.user.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserDtoMapper {
 
     UserDto toResponse(User user);

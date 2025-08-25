@@ -46,7 +46,7 @@ class UserRestTest {
                 .hasSize(2)
                 .value(list -> {
                     Assertions.assertThat(list).isNotEmpty();
-                    Assertions.assertThat(list.getFirst().id()).isEqualTo(1L);
+                    Assertions.assertThat(list.get(0).id()).isEqualTo(1L);
                 });
     }
 
