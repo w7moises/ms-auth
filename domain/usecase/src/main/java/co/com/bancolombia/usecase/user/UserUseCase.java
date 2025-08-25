@@ -1,5 +1,6 @@
 package co.com.bancolombia.usecase.user;
 
+import co.com.bancolombia.model.role.gateways.RoleRepository;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import reactor.core.publisher.Mono;
 public class UserUseCase {
     private final UserRepository userRepository;
 
+    private final RoleRepository roleRepository;
+
     public Mono<User> saveUser(User user) {
-        return userRepository.saveUser(user);
+        return roleRepository.findRoleBydId(user.getRoleId()).then(userRepository.saveUser(user));
     }
 
     public Mono<User> updateUser(User user) {

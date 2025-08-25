@@ -4,6 +4,8 @@ import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.r2dbc.entity.UserEntity;
 import co.com.bancolombia.r2dbc.exception.FoundException;
 import co.com.bancolombia.r2dbc.exception.NotFoundException;
+import co.com.bancolombia.r2dbc.repository.UserReactiveRepository;
+import co.com.bancolombia.r2dbc.repository.UserReactiveRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +43,7 @@ class UserReactiveRepositoryAdapterTest {
             .cellphone("982389811")
             .email("w7@gmail.com")
             .salary(new BigDecimal("2345"))
+            .roleId(2L)
             .build();
 
     public static final User USER_MOCK2 = User.builder()
@@ -53,6 +56,7 @@ class UserReactiveRepositoryAdapterTest {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     public static final User USER_MOCK_UPDATE = User.builder()
@@ -65,6 +69,7 @@ class UserReactiveRepositoryAdapterTest {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     public static final UserEntity USER_MOCK_ENTITY = UserEntity.builder()
@@ -77,6 +82,7 @@ class UserReactiveRepositoryAdapterTest {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     public static final UserEntity USER_MOCK_ENTITY2 = UserEntity.builder()
@@ -89,6 +95,7 @@ class UserReactiveRepositoryAdapterTest {
             .cellphone("666423665")
             .email("wmolina@gmail.com")
             .salary(new BigDecimal("1234"))
+            .roleId(2L)
             .build();
 
     @Test

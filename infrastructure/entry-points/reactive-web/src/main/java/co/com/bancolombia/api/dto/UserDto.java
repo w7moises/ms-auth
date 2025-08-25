@@ -12,6 +12,7 @@ public record UserDto(
         String address,
         String cellphone,
         String email,
-        BigDecimal salary
+        BigDecimal salary,
+        Long roleId
 ) {
 }

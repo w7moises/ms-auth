@@ -3,6 +3,7 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.EditUserDto;
 import co.com.bancolombia.api.dto.UserDto;
+import co.com.bancolombia.model.role.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -213,9 +214,61 @@ public class RouterRest {
                                     )
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/roles/{id}",
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.GET,
+                    beanClass = RoleHandler.class,
+                    beanMethod = "getRoleById",
+                    operation = @Operation(
+                            operationId = "getRoleById",
+                            summary = "Get role by id",
+                            parameters = {
+                                    @Parameter(name = "id", in = ParameterIn.PATH, required = true)
+                            },
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "OK",
+                                            content = @Content(schema = @Schema(implementation = Role.class))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "404",
+                                            description = "Not found",
+                                            content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
+                                    )
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/roles",
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.POST,
+                    beanClass = RoleHandler.class,
+                    beanMethod = "createRole",
+                    operation = @Operation(
+                            operationId = "createRole",
+                            summary = "Create role",
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(implementation = Role.class))
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "201",
+                                            description = "Created",
+                                            content = @Content(schema = @Schema(type = "string", example = "Role saved with id:"))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "400",
+                                            description = "Validation failed",
+                                            content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
+                                    )
+                            }
+                    )
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler) {
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, RoleHandler roleHandler) {
         return RouterFunctions
                 .route()
                 .path("/api/v1/users", builder -> builder
@@ -226,6 +279,10 @@ public class RouterRest {
                         .GET("/document/{document}", userHandler::getUserByDocumentNumber)
                         .GET("/email/{email}", userHandler::getUserByEmail)
                         .DELETE("/email/{email}", userHandler::deleteUserByEmail)
+                )
+                .path("/api/v1/roles", builder -> builder
+                        .GET("/{id}", roleHandler::getRoleById)
+                        .POST("", roleHandler::createRole)
                 )
                 .build();
     }

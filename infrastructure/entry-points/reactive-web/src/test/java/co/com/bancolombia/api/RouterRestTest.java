@@ -3,6 +3,7 @@ package co.com.bancolombia.api;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDtoMapperImpl;
 import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.usecase.role.RoleUseCase;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,21 +19,23 @@ import reactor.core.publisher.Mono;
 
 import static co.com.bancolombia.api.utils.MockData.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class, RoleHandler.class})
 @WebFluxTest(excludeAutoConfiguration = {
         org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration.class
 })
 @Import(UserDtoMapperImpl.class)
-class UserRestTest {
+class RouterRestTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @MockitoBean
     private UserUseCase userUseCase;
+
+    @MockitoBean
+    private RoleUseCase roleUseCase;
 
     @Test
     void shouldGetAllUsers() {
