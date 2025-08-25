@@ -76,7 +76,7 @@ public class UserHandler {
                         .bodyValue(dto));
     }
 
-    public Mono<ServerResponse> getAllUsers(ServerRequest request) {
+    public Mono<ServerResponse> getAllUsers() {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userUseCase.findAllUsers(), UserDto.class);
