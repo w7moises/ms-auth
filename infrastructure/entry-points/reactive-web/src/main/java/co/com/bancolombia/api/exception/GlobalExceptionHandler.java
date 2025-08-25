@@ -67,7 +67,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
             String reason = Optional.ofNullable(rse.getReason()).orElse("").trim();
             if (!reason.isBlank()) {
                 resolvedMessage = messageSource.getMessage(reason, null, reason, locale);
-            } else if (resolvedMessage.isBlank() && ex.getMessage() != null) {
+            } else if (resolvedMessage.isBlank()) {
                 resolvedMessage = ex.getMessage();
             }
         } else if (resolvedMessage.isBlank() && ex != null && ex.getMessage() != null) {

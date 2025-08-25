@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MyReactiveRepositoryAdapterTest {
+class UserReactiveRepositoryAdapterTest {
 
     @InjectMocks
     UserReactiveRepositoryAdapter adapter;
@@ -106,6 +106,16 @@ class MyReactiveRepositoryAdapterTest {
         when(mapper.map(USER_MOCK_ENTITY, User.class)).thenReturn(USER_MOCK);
         when(repository.findByEmail("wmolina@gmail.com")).thenReturn(Mono.just(USER_MOCK_ENTITY));
         Mono<User> data = adapter.findUserByEmail("wmolina@gmail.com");
+        StepVerifier.create(data)
+                .expectNextMatches(user -> user.getId().equals(1L) && user.getName().equals("Moises"))
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldFindUserByDocumentNumber() {
+        when(mapper.map(USER_MOCK_ENTITY, User.class)).thenReturn(USER_MOCK);
+        when(repository.findByDocumentNumber("73727173")).thenReturn(Mono.just(USER_MOCK_ENTITY));
+        Mono<User> data = adapter.findUserByDocumentNumber("73727173");
         StepVerifier.create(data)
                 .expectNextMatches(user -> user.getId().equals(1L) && user.getName().equals("Moises"))
                 .verifyComplete();

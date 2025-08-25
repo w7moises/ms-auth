@@ -67,10 +67,19 @@ public class UserHandler {
                         .bodyValue(dto));
     }
 
+    public Mono<ServerResponse> getUserByDocumentNumber(ServerRequest request) {
+        String document = request.pathVariable("document");
+        return userUseCase.findUserByDocumentNumber(document)
+                .map(mapper::toResponse)
+                .flatMap(dto -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(dto));
+    }
+
     public Mono<ServerResponse> getAllUsers(ServerRequest request) {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(userUseCase.findAllUsers().map(mapper::toResponse), UserDto.class);
+                .body(userUseCase.findAllUsers(), UserDto.class);
     }
 
     public Mono<ServerResponse> deleteUserByEmail(ServerRequest request) {

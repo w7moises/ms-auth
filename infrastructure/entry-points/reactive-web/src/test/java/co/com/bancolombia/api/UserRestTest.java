@@ -77,6 +77,19 @@ class UserRestTest {
     }
 
     @Test
+    void shouldGetUserByDocumentNumber() {
+        String document = "73727173";
+        when(userUseCase.findUserByDocumentNumber(document)).thenReturn(Mono.just(USER_MOCK));
+        webTestClient.get()
+                .uri(USERS_BASE + "/document/{document}", document)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDto.class)
+                .value(u -> Assertions.assertThat(u.documentNumber()).isEqualTo(document));
+    }
+
+    @Test
     void shouldPostCreateUser() {
         when(userUseCase.saveUser(any(User.class))).thenReturn(Mono.just(USER_MOCK2));
         webTestClient.post()
