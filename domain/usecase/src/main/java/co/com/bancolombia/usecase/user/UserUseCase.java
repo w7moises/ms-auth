@@ -1,5 +1,6 @@
 package co.com.bancolombia.usecase.user;
 
+import co.com.bancolombia.model.login.gateways.PasswordHasher;
 import co.com.bancolombia.model.role.gateways.RoleRepository;
 import co.com.bancolombia.model.user.User;
 import co.com.bancolombia.model.user.gateways.UserRepository;
@@ -10,10 +11,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserUseCase {
     private final UserRepository userRepository;
-
+    private final PasswordHasher passwordHasher;
     private final RoleRepository roleRepository;
 
     public Mono<User> saveUser(User user) {
+        user.setPassword(passwordHasher.encode(user.getPassword()));
         return roleRepository.findRoleBydId(user.getRoleId()).then(userRepository.saveUser(user));
     }
 

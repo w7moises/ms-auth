@@ -27,6 +27,7 @@ public class UserEntity {
     private String address;
     private String cellphone;
     private String email;
+    private String password;
     private BigDecimal salary;
     @Column("role_id")
     private Long roleId;
