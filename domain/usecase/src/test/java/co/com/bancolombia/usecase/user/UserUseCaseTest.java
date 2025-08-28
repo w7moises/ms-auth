@@ -1,5 +1,6 @@
 package co.com.bancolombia.usecase.user;
 
+import co.com.bancolombia.model.login.gateways.PasswordHasher;
 import co.com.bancolombia.model.role.Role;
 import co.com.bancolombia.model.role.gateways.RoleRepository;
 import co.com.bancolombia.model.user.User;
@@ -23,6 +24,9 @@ class UserUseCaseTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    PasswordHasher passwordHasher;
 
     @Mock
     RoleRepository roleRepository;
@@ -53,7 +57,7 @@ class UserUseCaseTest {
 
     @BeforeEach
     void setUp() {
-        useCase = new UserUseCase(userRepository, roleRepository);
+        useCase = new UserUseCase(userRepository, passwordHasher, roleRepository);
     }
 
     @Test

@@ -311,8 +311,8 @@ public class RouterRest {
                         .GET("/{id}", roleHandler::getRoleById)
                         .POST("", roleHandler::createRole)
                 )
-                .path("/api/v1/auth", builder -> builder
-                        .POST("", authorizationHandler::login))
+                .path("/api/v1", builder -> builder
+                        .POST("/login", authorizationHandler::login))
                 .build();
     }
 }
