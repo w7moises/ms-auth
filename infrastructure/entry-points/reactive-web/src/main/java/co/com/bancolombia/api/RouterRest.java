@@ -268,7 +268,7 @@ public class RouterRest {
                     )
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, RoleHandler roleHandler) {
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, RoleHandler roleHandler, AuthorizationHandler authorizationHandler) {
         return RouterFunctions
                 .route()
                 .path("/api/v1/users", builder -> builder
@@ -284,6 +284,8 @@ public class RouterRest {
                         .GET("/{id}", roleHandler::getRoleById)
                         .POST("", roleHandler::createRole)
                 )
+                .path("/api/v1/auth", builder -> builder
+                        .POST("", authorizationHandler::login))
                 .build();
     }
 }
