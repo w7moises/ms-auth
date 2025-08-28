@@ -2,6 +2,7 @@ package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.EditUserDto;
+import co.com.bancolombia.api.dto.LoginRequest;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.model.role.Role;
 import io.swagger.v3.oas.annotations.Operation;
@@ -262,6 +263,32 @@ public class RouterRest {
                                     @ApiResponse(
                                             responseCode = "400",
                                             description = "Validation failed",
+                                            content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
+                                    )
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/auth",
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.POST,
+                    beanClass = AuthorizationHandler.class,
+                    beanMethod = "login",
+                    operation = @Operation(
+                            operationId = "login",
+                            summary = "Authenticate",
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(implementation = LoginRequest.class))
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Ok",
+                                            content = @Content(schema = @Schema(type = "string", example = "Token"))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "Authentication failed",
                                             content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
                                     )
                             }

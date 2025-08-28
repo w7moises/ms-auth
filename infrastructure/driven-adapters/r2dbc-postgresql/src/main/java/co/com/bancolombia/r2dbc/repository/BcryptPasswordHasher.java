@@ -2,6 +2,7 @@ package co.com.bancolombia.r2dbc.repository;
 
 import co.com.bancolombia.model.login.gateways.PasswordHasher;
 import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.r2dbc.exception.InvalidCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -18,7 +19,7 @@ public class BcryptPasswordHasher implements PasswordHasher {
     @Override
     public Mono<User> verifyPassword(User user, String password) {
         if (!this.matches(password, user.getPassword())) {
-            return Mono.error(new IllegalArgumentException("Invalid Credentials"));
+            return Mono.error(new InvalidCredentialsException("Invalid Credentials"));
         }
         return Mono.just(user);
     }
