@@ -1,14 +1,17 @@
 package co.com.bancolombia.api;
 
+import co.com.bancolombia.api.dto.LoginResponse;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.api.mapper.UserDtoMapperImpl;
 import co.com.bancolombia.model.user.User;
+import co.com.bancolombia.usecase.auth.AuthUseCase;
 import co.com.bancolombia.usecase.role.RoleUseCase;
 import co.com.bancolombia.usecase.user.UserUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,9 +22,10 @@ import reactor.core.publisher.Mono;
 
 import static co.com.bancolombia.api.utils.MockData.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {RouterRest.class, UserHandler.class, RoleHandler.class})
+@ContextConfiguration(classes = {RouterRest.class, UserHandler.class, RoleHandler.class, AuthorizationHandler.class})
 @WebFluxTest(excludeAutoConfiguration = {
         org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration.class
 })
@@ -35,7 +39,36 @@ class RouterRestTest {
     private UserUseCase userUseCase;
 
     @MockitoBean
+    private AuthUseCase authUseCase;
+
+    @MockitoBean
     private RoleUseCase roleUseCase;
+
+    @Test
+    void shouldLoginSuccessfully() {
+        when(authUseCase.login(anyString(), anyString())).thenReturn(Mono.just(loginResponse));
+        webTestClient.post()
+                .uri("/api/v1/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(loginRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(LoginResponse.class)
+                .value(response -> {
+                    assert response.token().equals("jwt-token-here");
+                });
+    }
+
+    @Test
+    void shouldNotLoginWithoutEmailRegister() {
+        when(authUseCase.login(anyString(), anyString())).thenReturn(Mono.error(new Exception("error")));
+        webTestClient.post()
+                .uri("/api/v1/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(loginRequest)
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
 
     @Test
     void shouldGetAllUsers() {

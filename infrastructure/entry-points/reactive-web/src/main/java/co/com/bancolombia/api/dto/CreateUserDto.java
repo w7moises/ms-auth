@@ -28,6 +28,9 @@ public record CreateUserDto(
         @Email(message = "{email.format}")
         String email,
 
+        @NotBlank(message = "{password.required}")
+        String password,
+
         @NotNull(message = "{salary.required}")
         @DecimalMin(value = "0.0", inclusive = false, message = "{salary.min}")
         @DecimalMax(value = "1500000.0", inclusive = false, message = "{salary.max}")

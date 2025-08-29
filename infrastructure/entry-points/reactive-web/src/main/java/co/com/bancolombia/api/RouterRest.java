@@ -2,6 +2,7 @@ package co.com.bancolombia.api;
 
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.EditUserDto;
+import co.com.bancolombia.api.dto.LoginRequest;
 import co.com.bancolombia.api.dto.UserDto;
 import co.com.bancolombia.model.role.Role;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class RouterRest {
+    private static final String ID_PATH = "/{id}";
+
     @Bean
     @RouterOperations({
             @RouterOperation(
@@ -266,24 +269,52 @@ public class RouterRest {
                                     )
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/auth",
+                    produces = {MediaType.APPLICATION_JSON_VALUE},
+                    method = RequestMethod.POST,
+                    beanClass = AuthorizationHandler.class,
+                    beanMethod = "login",
+                    operation = @Operation(
+                            operationId = "login",
+                            summary = "Authenticate",
+                            requestBody = @RequestBody(
+                                    content = @Content(schema = @Schema(implementation = LoginRequest.class))
+                            ),
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Ok",
+                                            content = @Content(schema = @Schema(type = "string", example = "Token"))
+                                    ),
+                                    @ApiResponse(
+                                            responseCode = "401",
+                                            description = "Authentication failed",
+                                            content = @Content(schema = @Schema(ref = "#/components/schemas/ApiError"))
+                                    )
+                            }
+                    )
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, RoleHandler roleHandler) {
+    public RouterFunction<ServerResponse> routerFunction(UserHandler userHandler, RoleHandler roleHandler, AuthorizationHandler authorizationHandler) {
         return RouterFunctions
                 .route()
                 .path("/api/v1/users", builder -> builder
                         .POST("", userHandler::createUser)
                         .GET("", request -> userHandler.getAllUsers())
-                        .GET("/{id}", userHandler::getUserById)
-                        .PUT("/{id}", userHandler::updateUser)
+                        .GET(ID_PATH, userHandler::getUserById)
+                        .PUT(ID_PATH, userHandler::updateUser)
                         .GET("/document/{document}", userHandler::getUserByDocumentNumber)
                         .GET("/email/{email}", userHandler::getUserByEmail)
                         .DELETE("/email/{email}", userHandler::deleteUserByEmail)
                 )
                 .path("/api/v1/roles", builder -> builder
-                        .GET("/{id}", roleHandler::getRoleById)
+                        .GET(ID_PATH, roleHandler::getRoleById)
                         .POST("", roleHandler::createRole)
                 )
+                .path("/api/v1", builder -> builder
+                        .POST("/login", authorizationHandler::login))
                 .build();
     }
 }

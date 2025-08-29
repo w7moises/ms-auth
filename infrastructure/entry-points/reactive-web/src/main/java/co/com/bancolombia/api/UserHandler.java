@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -22,6 +23,7 @@ public class UserHandler {
     private final Validator validator;
     private final UserDtoMapper mapper;
 
+    @PreAuthorize("hasAnyRole('ADMIN','ADVISER')")
     public Mono<ServerResponse> createUser(ServerRequest request) {
         return request.bodyToMono(CreateUserDto.class)
                 .flatMap(dto -> {
@@ -76,6 +78,7 @@ public class UserHandler {
                         .bodyValue(dto));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','ADVISER')")
     public Mono<ServerResponse> getAllUsers() {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)

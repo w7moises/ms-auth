@@ -2,6 +2,8 @@ package co.com.bancolombia.api.utils;
 
 import co.com.bancolombia.api.dto.CreateUserDto;
 import co.com.bancolombia.api.dto.EditUserDto;
+import co.com.bancolombia.api.dto.LoginRequest;
+import co.com.bancolombia.model.login.LoginResponse;
 import co.com.bancolombia.model.user.User;
 
 import java.math.BigDecimal;
@@ -51,7 +53,7 @@ public class MockData {
 
     public static final CreateUserDto CREATE_USER_DTO = new CreateUserDto(
             "Walter", "Molina", "73728131", LocalDate.of(1999, 5, 22),
-            "Av. puquina 115", "666423665", "wmolina@gmail.com",
+            "Av. puquina 115", "666423665", "wmolina@gmail.com", "admin",
             new BigDecimal("1234"), 2L
     );
 
@@ -60,4 +62,8 @@ public class MockData {
             "Calle ayacucho", "982389811", "w7@gmail.com",
             new BigDecimal("2345"), 2L
     );
+
+    public static final LoginRequest loginRequest = new LoginRequest("test@example.com", "password123");
+
+    public static final LoginResponse loginResponse = new LoginResponse("jwt-token-here");
 }
