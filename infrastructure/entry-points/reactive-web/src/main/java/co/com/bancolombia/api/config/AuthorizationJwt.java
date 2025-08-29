@@ -69,7 +69,7 @@ public class AuthorizationJwt implements WebFluxConfigurer {
                                 "/swagger-resources",
                                 "/v2/api-docs",
                                 "/v2/api-docs/**",
-                                "/api/v1/auth"
+                                "/api/v1/login"
                         ).permitAll()
                         .anyExchange()
                         .authenticated())

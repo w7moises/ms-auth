@@ -25,6 +25,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class RouterRest {
+    private static final String ID_PATH = "/{id}";
+
     @Bean
     @RouterOperations({
             @RouterOperation(
@@ -301,14 +303,14 @@ public class RouterRest {
                 .path("/api/v1/users", builder -> builder
                         .POST("", userHandler::createUser)
                         .GET("", request -> userHandler.getAllUsers())
-                        .GET("/{id}", userHandler::getUserById)
-                        .PUT("/{id}", userHandler::updateUser)
+                        .GET(ID_PATH, userHandler::getUserById)
+                        .PUT(ID_PATH, userHandler::updateUser)
                         .GET("/document/{document}", userHandler::getUserByDocumentNumber)
                         .GET("/email/{email}", userHandler::getUserByEmail)
                         .DELETE("/email/{email}", userHandler::deleteUserByEmail)
                 )
                 .path("/api/v1/roles", builder -> builder
-                        .GET("/{id}", roleHandler::getRoleById)
+                        .GET(ID_PATH, roleHandler::getRoleById)
                         .POST("", roleHandler::createRole)
                 )
                 .path("/api/v1", builder -> builder

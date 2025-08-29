@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserTest {
+class UserTest {
     private static final User USER_WALTER = User.builder()
             .id(10L)
             .name("Walter")
