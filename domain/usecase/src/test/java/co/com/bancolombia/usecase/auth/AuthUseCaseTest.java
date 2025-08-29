@@ -40,6 +40,7 @@ class AuthUseCaseTest {
             .id(1L)
             .email("w7moises@gmail.com")
             .password("hashedPassword")
+            .documentNumber("73911242")
             .roleId(1L)
             .build();
 
@@ -61,7 +62,7 @@ class AuthUseCaseTest {
         when(userRepository.findUserByEmail("w7moises@gmail.com")).thenReturn(Mono.just(USER));
         when(passwordHasher.verifyPassword(USER, "password123")).thenReturn(Mono.just(USER));
         when(roleRepository.findRoleBydId(1L)).thenReturn(Mono.just(ROLE));
-        when(tokenGenerator.generate("w7moises@gmail.com", List.of("ADMIN"), 1L))
+        when(tokenGenerator.generate("w7moises@gmail.com", List.of("ADMIN"), 1L, "73911242"))
                 .thenReturn("jwt-token-123");
         StepVerifier.create(useCase.login("w7moises@gmail.com", "password123"))
                 .expectNext(LOGIN_RESPONSE)

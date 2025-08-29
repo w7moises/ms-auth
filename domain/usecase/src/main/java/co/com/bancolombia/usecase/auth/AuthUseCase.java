@@ -26,7 +26,8 @@ public class AuthUseCase {
                                 .map(Role::getName)
                                 .defaultIfEmpty("USER")
                                 .map(List::of)
-                                .map(roles -> new LoginResponse(tokenGenerator.generate(email, roles, user.getId())))
+                                .map(roles ->
+                                        new LoginResponse(tokenGenerator.generate(email, roles, user.getId(), user.getDocumentNumber())))
                 );
     }
 }

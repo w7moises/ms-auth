@@ -64,6 +64,7 @@ public class AuthorizationJwt implements WebFluxConfigurer {
                                 "/webjars/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
+                                "/api/v1/users/document/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/swagger-resources",

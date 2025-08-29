@@ -34,7 +34,7 @@ public class H256TokenGenerator implements TokenGenerator {
     }
 
     @Override
-    public String generate(String subject, List<String> roles, Long userId) {
+    public String generate(String subject, List<String> roles, Long userId, String documentNumber) {
         try {
             Instant now = Instant.now();
             var claims = new JWTClaimsSet.Builder()
@@ -44,6 +44,7 @@ public class H256TokenGenerator implements TokenGenerator {
                     .expirationTime(Date.from(now.plusSeconds(ttlSeconds)))
                     .claim("azp", clientId)
                     .claim("id", userId)
+                    .claim("document", documentNumber)
                     .claim("roles", roles)
                     .build();
             var header = new JWSHeader(JWSAlgorithm.HS256);
